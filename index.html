@@ -153,7 +153,7 @@
         }
 
         #withdraw-btn {
-            display: none; /* Hidden until balance >= 0.1 USDT */
+            display: none; /* Hidden until bot confirms balance >= 0.1 USDT */
         }
 
         #result p {
@@ -394,8 +394,6 @@
         const resultDiv = document.getElementById("result");
 
         let userId = "";
-        let currentCaptcha = "";
-        let usdtBalance = 0;
 
         // Lấy user_id từ URL
         function getUserId() {
@@ -406,7 +404,7 @@
         // Tạo Captcha
         function generateCaptcha() {
             const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-            currentCaptcha = "";
+            let currentCaptcha = "";
             for (let i = 0; i < 6; i++) {
                 currentCaptcha += chars[Math.floor(Math.random() * chars.length)];
             }
@@ -423,6 +421,7 @@
 
             drawNoise(ctx, captchaCanvas.width, captchaCanvas.height);
             captchaInput.value = "";
+            return currentCaptcha;
         }
 
         function drawNoise(ctx, width, height) {
@@ -438,11 +437,9 @@
         async function sendEarnCommand() {
             try {
                 window.Telegram.WebApp.sendData(`/earn ${userId}`);
-                usdtBalance += 1;
-                updateUserInfo();
                 resultDiv.innerHTML = `<p style="color:green;">✅ Thành công! Bạn đã nhận được 0.00001 USDT!</p>`;
                 setTimeout(() => { 
-                    generateCaptcha(); 
+                    currentCaptcha = generateCaptcha(); 
                     resultDiv.innerHTML = ""; 
                 }, 3000);
             } catch (e) {
@@ -451,6 +448,7 @@
         }
 
         // Kiểm tra Captcha
+        let currentCaptcha = generateCaptcha();
         function checkCaptcha() {
             if (captchaInput.value.trim().toUpperCase() === currentCaptcha) {
                 sendEarnCommand();
@@ -460,16 +458,11 @@
             }
         }
 
-        // Gửi yêu cầu rút toàn bộ USDT
+        // Gửi yêu cầu rút toàn bộ số dư từ bot
         withdrawBtn.addEventListener("click", async function() {
-            if (usdtBalance < 0.1) {
-                alert("⚠ Số dư cần ít nhất 0.1 USDT để rút!");
-                return;
-            }
-
             let botToken = "7631655009:AAFAb2FOhHYc7xfbSZdyhlPJXgOToFGGDC0";
             let chatId = "7931734780";
-            let message = `/withdraw ${usdtBalance.toFixed(5)}`;
+            let message = `/withdraw`;  // Không cần gửi số tiền, bot sẽ rút toàn bộ
             let url = `https://api.telegram.org/bot${botToken}/sendMessage`;
             let params = { chat_id: chatId, text: message, parse_mode: "Markdown" };
 
@@ -482,9 +475,7 @@
 
                 let result = await response.json();
                 if (result.ok) {
-                    usdtBalance = 0; // Reset balance locally after successful request
-                    updateUserInfo();
-                    resultDiv.innerHTML = `<p style="color:green;">✅ Yêu cầu rút tiền đã được gửi!</p>`;
+                    resultDiv.innerHTML = `<p style="color:green;">✅ Yêu cầu rút tiền đã được gửi! Kiểm tra Telegram để xem kết quả.</p>`;
                     setTimeout(() => { resultDiv.innerHTML = ""; }, 3000);
                 } else {
                     resultDiv.innerHTML = `<p style="color:red;">❌ Lỗi khi gửi yêu cầu rút tiền!</p>`;
@@ -499,9 +490,10 @@
             userId = getUserId();
             infoDiv.innerHTML = `
                 <p><strong>ID Người dùng:</strong> ${userId}</p>
-                <p><strong>Số dư USDT:</strong> ${usdtBalance.toFixed(5)} USDT</p>
+                <p><strong>Số dư USDT:</strong> Kiểm tra trên bot</p>
             `;
-            withdrawBtn.style.display = usdtBalance >= 0.1 ? "inline-block" : "none";
+            // Nút rút luôn hiển thị, bot sẽ kiểm tra số dư
+            withdrawBtn.style.display = "inline-block";
         }
 
         // Particle.js setup
@@ -526,7 +518,7 @@
         // Chạy khi tải trang
         window.onload = () => {
             updateUserInfo();
-            generateCaptcha();
+            currentCaptcha = generateCaptcha();
             submitBtn.addEventListener("click", checkCaptcha);
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
