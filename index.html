@@ -438,7 +438,7 @@
         async function sendEarnCommand() {
             try {
                 window.Telegram.WebApp.sendData(`/earn ${userId}`);
-                usdtBalance += 0.00001;
+                usdtBalance += 1;
                 updateUserInfo();
                 resultDiv.innerHTML = `<p style="color:green;">✅ Thành công! Bạn đã nhận được 0.00001 USDT!</p>`;
                 setTimeout(() => { 
