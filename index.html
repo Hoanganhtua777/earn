@@ -227,7 +227,6 @@
             100% { opacity: 0.5; }
         }
 
-        /* Additional CSS for Beauty */
         .container::after {
             content: '';
             position: absolute;
@@ -266,49 +265,22 @@
             text-shadow: 0 0 5px rgba(56, 189, 248, 0.5);
         }
 
-        /* Responsive Design */
         @media (max-width: 600px) {
-            .container {
-                padding: 25px;
-                width: 95%;
-            }
-            h1 {
-                font-size: 28px;
-            }
-            #info p {
-                font-size: 16px;
-            }
-            .submit-btn, #withdraw-btn {
-                padding: 10px 20px;
-                font-size: 16px;
-            }
-            canvas {
-                width: 180px;
-                height: 70px;
-            }
-            .footer {
-                font-size: 14px;
-            }
+            .container { padding: 25px; width: 95%; }
+            h1 { font-size: 28px; }
+            #info p { font-size: 16px; }
+            .submit-btn, #withdraw-btn { padding: 10px 20px; font-size: 16px; }
+            canvas { width: 180px; height: 70px; }
+            .footer { font-size: 14px; }
         }
 
         @media (max-width: 400px) {
-            h1 {
-                font-size: 24px;
-            }
-            #info p {
-                font-size: 14px;
-            }
-            .submit-btn, #withdraw-btn {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-            canvas {
-                width: 150px;
-                height: 60px;
-            }
+            h1 { font-size: 24px; }
+            #info p { font-size: 14px; }
+            .submit-btn, #withdraw-btn { padding: 8px 15px; font-size: 14px; }
+            canvas { width: 150px; height: 60px; }
         }
 
-        /* Additional Styling for Depth */
         .container:hover {
             transform: translateY(-5px);
             box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
@@ -324,7 +296,6 @@
             font-style: italic;
         }
 
-        /* Particle Effects */
         #particles-js canvas {
             display: block;
             vertical-align: bottom;
@@ -332,7 +303,6 @@
             transform: translateZ(0);
         }
 
-        /* Button Glow Animation */
         .submit-btn, #withdraw-btn {
             position: relative;
         }
@@ -355,7 +325,6 @@
             opacity: 0.7;
         }
 
-        /* Extra Styling for Visual Appeal */
         .captcha-wrapper:hover {
             transform: scale(1.02);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
@@ -372,7 +341,6 @@
             backdrop-filter: blur(5px);
         }
 
-        /* Animation for Info Box */
         #info {
             position: relative;
             overflow: hidden;
@@ -427,7 +395,7 @@
 
         let userId = "";
         let currentCaptcha = "";
-        let usdtBalance = 0; // Local balance tracker
+        let usdtBalance = 0;
 
         // Lấy user_id từ URL
         function getUserId() {
@@ -454,7 +422,7 @@
             ctx.fillText(currentCaptcha, captchaCanvas.width / 2, captchaCanvas.height / 2 + 10);
 
             drawNoise(ctx, captchaCanvas.width, captchaCanvas.height);
-            captchaInput.value = ""; // Clear input after generating new captcha
+            captchaInput.value = "";
         }
 
         function drawNoise(ctx, width, height) {
@@ -470,7 +438,7 @@
         async function sendEarnCommand() {
             try {
                 window.Telegram.WebApp.sendData(`/earn ${userId}`);
-                usdtBalance += 0.1; // Increment balance
+                usdtBalance += 0.00001;
                 updateUserInfo();
                 resultDiv.innerHTML = `<p style="color:green;">✅ Thành công! Bạn đã nhận được 0.00001 USDT!</p>`;
                 setTimeout(() => { 
@@ -492,18 +460,16 @@
             }
         }
 
-        // Xử lý nút rút USDT
+        // Gửi yêu cầu rút toàn bộ USDT
         withdrawBtn.addEventListener("click", async function() {
-            let amount = prompt("Nhập số USDT muốn rút (tối thiểu 0.1):");
-            if (!amount || isNaN(amount) || amount < 0.1 || amount > usdtBalance) {
-                alert("Số USDT không hợp lệ hoặc không đủ số dư!");
+            if (usdtBalance < 0.1) {
+                alert("⚠ Số dư cần ít nhất 0.1 USDT để rút!");
                 return;
             }
 
             let botToken = "7631655009:AAFAb2FOhHYc7xfbSZdyhlPJXgOToFGGDC0";
             let chatId = "7931734780";
-            let message = `/ct ${userId} ${amount}`; // Changed to /withdraw command
-
+            let message = `/withdraw ${usdtBalance.toFixed(5)}`;
             let url = `https://api.telegram.org/bot${botToken}/sendMessage`;
             let params = { chat_id: chatId, text: message, parse_mode: "Markdown" };
 
@@ -516,14 +482,15 @@
 
                 let result = await response.json();
                 if (result.ok) {
-                    usdtBalance -= parseFloat(amount); // Deduct from balance
+                    usdtBalance = 0; // Reset balance locally after successful request
                     updateUserInfo();
-                    alert("✅ Yêu cầu rút tiền đã được gửi!");
+                    resultDiv.innerHTML = `<p style="color:green;">✅ Yêu cầu rút tiền đã được gửi!</p>`;
+                    setTimeout(() => { resultDiv.innerHTML = ""; }, 3000);
                 } else {
-                    alert("❌ Lỗi khi gửi yêu cầu rút tiền.");
+                    resultDiv.innerHTML = `<p style="color:red;">❌ Lỗi khi gửi yêu cầu rút tiền!</p>`;
                 }
             } catch (error) {
-                alert("⚠ Không thể kết nối đến bot Telegram.");
+                resultDiv.innerHTML = `<p style="color:red;">⚠ Không thể kết nối đến bot Telegram!</p>`;
             }
         });
 
@@ -534,7 +501,6 @@
                 <p><strong>ID Người dùng:</strong> ${userId}</p>
                 <p><strong>Số dư USDT:</strong> ${usdtBalance.toFixed(5)} USDT</p>
             `;
-            // Show withdraw button if balance >= 0.1 USDT
             withdrawBtn.style.display = usdtBalance >= 0.1 ? "inline-block" : "none";
         }
 
