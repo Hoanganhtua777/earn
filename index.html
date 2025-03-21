@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiếm tiền với Captcha - Treeng Premium</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body {
+            background: linear-gradient(135deg, #1e1e2f, #3b3b6b, #5e5e9e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #fff;
+            animation: bgShift 12s ease infinite;
+        }
+        @keyframes bgShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 1s ease-in-out;
+            border: 3px solid #ff6f61;
+            overflow: hidden;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 38px;
+            color: #ff6f61;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 900;
+            text-shadow: 0 0 15px rgba(255, 111, 97, 0.8);
+            position: relative;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 50px;
+            height: 4px;
+            background: #ff6f61;
+            transform: translateX(-50%);
+            border-radius: 2px;
+            box-shadow: 0 0 10px #ff6f61;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #f7f9fc, #e2e8f0);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.8s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .info-box p {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .info-box span.label { font-weight: 700; color: #ff6f61; text-transform: uppercase; }
+        .info-box span.value { font-weight: 500; color: #555; }
+
+        .captcha-box {
+            background: linear-gradient(135deg, #f7f9fc, #e2e8f0);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.8s ease-out;
+        }
+        .captcha-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 15px;
+        }
+        .captcha-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ff6f61;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        .captcha-input:focus { border-color: #ff3d2e; }
+
+        .timer {
+            font-size: 18px;
+            color: #ff6f61;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-shadow: 0 0 5px rgba(255, 111, 97, 0.5);
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, #ff6f61, #ff3d2e);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 111, 97, 0.5);
+        }
+        .submit-btn:hover {
+            background: linear-gradient(90deg, #ff3d2e, #ff6f61);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 111, 97, 0.8);
+        }
+
+        .result-message {
+            font-size: 20px;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            animation: popIn 0.5s ease-out;
+        }
+        .result-message.success {
+            background: #2ed573;
+            color: white;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+        .result-message.error {
+            background: #ff4757;
+            color: white;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .loading {
+            font-size: 24px;
+            color: #2ed573;
+            font-style: italic;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 4px solid #2ed573;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .footer {
+            position: fixed;
+            bottom: 15px;
+            font-size: 16px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* Hiệu ứng viền động */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 30px;
+            background: linear-gradient(45deg, #ff6f61, #ff3d2e);
+            filter: blur(10px);
+            z-index: -1;
+            animation: glow 4s infinite;
+        }
+        @keyframes glow {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container { padding: 25px; width: 95%; }
+            h1 { font-size: 30px; }
+            .info-box p, .captcha-box p { font-size: 16px; }
+            .submit-btn { padding: 10px 25px; font-size: 16px; }
+            .footer { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="container">
+        <h1>Kiếm tiền với Captcha</h1>
+        <div id="info"></div>
+        <div id="captcha-box" class="captcha-box">
+            <img id="captcha-img" src="" alt="Captcha" class="captcha-img">
+            <div id="timer" class="timer">Thời gian còn lại: 60s</div>
+            <input type="text" id="captcha-input" class="captcha-input" placeholder="Nhập mã captcha">
+            <button id="submit-btn" class="submit-btn">Gửi</button>
+        </div>
+        <div id="result"></div>
+    </div>
+    <div class="footer">©Treeng Premium 2025 - Designed with 💖</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        const infoDiv = document.getElementById("info");
+        const captchaImg = document.getElementById("captcha-img");
+        const captchaInput = document.getElementById("captcha-input");
+        const submitBtn = document.getElementById("submit-btn");
+        const resultDiv = document.getElementById("result");
+        const timerDiv = document.getElementById("timer");
+
+        let userId = "";
+        let currentCaptcha = "";
+        let timeLeft = 60;
+        let timerInterval;
+
+        // Lấy user_id từ URL
+        function getUserId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get("user_id") || "Unknown";
+        }
+
+        // Tạo captcha từ API (sử dụng dịch vụ miễn phí Dummy Captcha API)
+        async function generateCaptcha() {
+            try {
+                // Sử dụng API Captcha Generator miễn phí (ví dụ: https://captcha.com)
+                // Đây là giả lập, thay bằng API thực nếu có
+                const response = await fetch("https://api.dummy-captcha.com/generate?difficulty=hard");
+                const data = await response.json();
+                captchaImg.src = data.image; // Giả lập URL hình ảnh
+                currentCaptcha = data.code; // Giả lập mã captcha
+            } catch (e) {
+                // Giả lập captcha nếu API không khả dụng
+                currentCaptcha = Math.random().toString(36).substr(2, 6).toUpperCase();
+                captchaImg.src = `https://via.placeholder.com/200x80/FF6F61/FFF?text=${currentCaptcha}`;
+            }
+            captchaInput.value = "";
+            resetTimer();
+        }
+
+        // Đếm ngược 60s và đổi captcha
+        function startTimer() {
+            timeLeft = 60;
+            timerDiv.textContent = `Thời gian còn lại: ${timeLeft}s`;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDiv.textContent = `Thời gian còn lại: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    generateCaptcha();
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            startTimer();
+        }
+
+        // Gửi lệnh kiếm tiền tới bot
+        async function sendEarnCommand() {
+            try {
+                window.Telegram.WebApp.sendData(`/earn ${userId}`);
+                resultDiv.innerHTML = `<div class="result-message success">✅ Thành công! Bạn đã nhận được 0.00001 USDT!</div>`;
+                submitBtn.disabled = true;
+                setTimeout(() => {
+                    generateCaptcha();
+                    submitBtn.disabled = false;
+                    resultDiv.innerHTML = "";
+                }, 3000);
+            } catch (e) {
+                resultDiv.innerHTML = `<div class="result-message error">❌ Lỗi: Không thể gửi lệnh tới bot!</div>`;
+            }
+        }
+
+        // Kiểm tra captcha
+        function checkCaptcha() {
+            const userInput = captchaInput.value.trim().toUpperCase();
+            if (userInput === currentCaptcha) {
+                sendEarnCommand();
+            } else {
+                resultDiv.innerHTML = `<div class="result-message error">❌ Sai mã captcha! Vui lòng thử lại.</div>`;
+                setTimeout(() => { resultDiv.innerHTML = ""; }, 2000);
+            }
+        }
+
+        // Hiển thị thông tin người dùng
+        function displayUserInfo() {
+            userId = getUserId();
+            const dummyBalance = "0.00000"; // Giả lập số dư, thay bằng API nếu cần
+            infoDiv.innerHTML = `
+                <div class="info-box">
+                    <p><span class="label">ID Người dùng:</span> <span class="value">${userId}</span></p>
+                    <p><span class="label">Số dư USDT:</span> <span class="value">${dummyBalance} USDT</span></p>
+                    <p><span class="label">Mã Captcha giải được:</span> <span class="value">0</span></p>
+                </div>
+            `;
+        }
+
+        // Particle.js setup
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 100, density: { enable: true, value_area: 800 } },
+                color: { value: "#ff6f61" },
+                shape: { type: "circle" },
+                opacity: { value: 0.6, random: true },
+                size: { value: 4, random: true },
+                line_linked: { enable: true, distance: 120, color: "#ff6f61", opacity: 0.4, width: 1 },
+                move: { enable: true, speed: 3, direction: "none", random: true, straight: false, out_mode: "out" }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+                modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
+            },
+            retina_detect: true
+        });
+
+        // Tự động chạy
+        window.onload = () => {
+            displayUserInfo();
+            generateCaptcha();
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+            submitBtn.addEventListener("click", checkCaptcha);
+            captchaInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") checkCaptcha();
+            });
+        };
+    </script>
+</body>
+</html>
