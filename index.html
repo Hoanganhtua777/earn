@@ -3,54 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch sử P2P TON - Treeng Premium</title>
+    <title>Kiếm tiền với Captcha - Treeng Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd, #7dd3fc);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            color: #fff;
-            animation: bgGradient 10s ease infinite;
+            color: #1e40af;
+            position: relative;
+            animation: bgWave 18s ease infinite;
         }
-        @keyframes bgGradient {
+
+        @keyframes bgWave {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            max-width: 800px;
+            max-width: 500px;
             width: 90%;
             text-align: center;
             position: relative;
-            animation: fadeIn 1s ease-in-out;
-            border: 3px solid #00c6ff;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 3px solid #38bdf8;
+            animation: fadeIn 1.2s ease-in-out;
             overflow: hidden;
         }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
-            font-size: 40px;
-            color: #00c6ff;
-            margin-bottom: 30px;
+            font-size: 36px;
+            color: #38bdf8;
+            margin-bottom: 25px;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            font-weight: 900;
-            text-shadow: 0 0 10px rgba(0, 198, 255, 0.7);
+            letter-spacing: 3px;
+            font-weight: 800;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.8);
             position: relative;
         }
+
         h1::after {
             content: '';
             position: absolute;
@@ -58,126 +68,117 @@
             left: 50%;
             width: 60px;
             height: 4px;
-            background: #00c6ff;
+            background: #38bdf8;
             transform: translateX(-50%);
             border-radius: 2px;
-            box-shadow: 0 0 10px #00c6ff;
+            box-shadow: 0 0 10px #38bdf8;
         }
 
-        .transaction-list {
-            max-height: 400px;
-            overflow-y: auto;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        #info {
+            background: linear-gradient(135deg, #f0f9ff, #dbeafe);
             padding: 20px;
             border-radius: 15px;
-            margin-top: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.8s ease-out;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .transaction-list::-webkit-scrollbar {
-            width: 8px;
-        }
-        .transaction-list::-webkit-scrollbar-thumb {
-            background: #00c6ff;
-            border-radius: 4px;
-        }
-        .transaction-list::-webkit-scrollbar-track {
-            background: #e9ecef;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.8s ease-out;
         }
 
-        .transaction-item {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            text-align: left;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .transaction-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.5);
-        }
-        .transaction-item p {
-            font-size: 16px;
-            color: #333;
-            margin: 5px 0;
+
+        #info p {
+            font-size: 18px;
+            color: #1e40af;
+            margin: 10px 0;
             display: flex;
             justify-content: space-between;
         }
-        .transaction-item span.label { font-weight: 700; color: #00c6ff; text-transform: uppercase; }
-        .transaction-item span.value { font-weight: 500; color: #555; }
 
-        .error {
-            font-size: 30px;
-            color: #ff4757;
-            font-weight: 800;
-            margin: 20px 0;
-            text-shadow: 0 0 10px rgba(255, 71, 87, 0.7);
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        .error::before { content: '🐒'; position: absolute; left: -40px; font-size: 36px; animation: bounce 1s infinite; }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        #info strong {
+            color: #38bdf8;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
-        .loading {
-            font-size: 24px;
-            color: #2ed573;
-            font-style: italic;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        canvas {
+            background: #fff;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #38bdf8;
+            transition: transform 0.3s ease;
         }
-        .spinner {
-            width: 28px;
-            height: 28px;
-            border: 4px solid #2ed573;
-            border-top: 4px solid transparent;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .footer {
-            position: fixed;
-            bottom: 15px;
+        canvas:hover {
+            transform: scale(1.05);
+        }
+
+        .captcha-input {
+            width: 100%;
+            padding: 12px;
             font-size: 16px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 5px 15px;
-            border-radius: 20px;
+            border: 2px solid #38bdf8;
+            border-radius: 10px;
+            outline: none;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .back-btn {
-            background: linear-gradient(90deg, #00c6ff, #0072ff);
-            color: white;
+        .captcha-input:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+
+        .submit-btn, #withdraw-btn {
+            background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+            color: #fff;
             padding: 12px 25px;
             border: none;
             border-radius: 25px;
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 25px;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.5);
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .back-btn:hover {
-            background: linear-gradient(90deg, #0072ff, #00c6ff);
+
+        .submit-btn:hover, #withdraw-btn:hover {
+            background: linear-gradient(90deg, #0ea5e9, #38bdf8);
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 198, 255, 0.8);
+            box-shadow: 0 8px 20px rgba(56, 189, 248, 0.8);
+        }
+
+        #withdraw-btn {
+            display: none;
+        }
+
+        #result p {
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        #result p[style*="color:green"] {
+            background: #34d399;
+            color: white;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #result p[style*="color:red"] {
+            background: #f87171;
+            color: white;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
         }
 
         #particles-js {
@@ -189,111 +190,341 @@
             z-index: -1;
         }
 
+        .footer {
+            position: fixed;
+            bottom: 15px;
+            font-size: 16px;
+            color: #1e40af;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+            background: rgba(255, 255, 255, 0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+            animation: fadeInFooter 1s ease-in-out;
+        }
+
+        @keyframes fadeInFooter {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #38bdf8, #0ea5e9);
+            filter: blur(10px);
+            z-index: -1;
+            animation: glowBorder 4s infinite;
+        }
+
+        @keyframes glowBorder {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.1), transparent);
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        .btn-wrapper {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .captcha-wrapper {
+            position: relative;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f9ff, #dbeafe);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .captcha-wrapper::before {
+            content: '🔒';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #38bdf8;
+            text-shadow: 0 0 5px rgba(56, 189, 248, 0.5);
+        }
+
         @media (max-width: 600px) {
             .container { padding: 25px; width: 95%; }
-            h1 { font-size: 30px; }
-            .transaction-item p { font-size: 14px; flex-direction: column; text-align: left; }
-            .transaction-item span.label, .transaction-item span.value { text-align: left; }
-            .error { font-size: 24px; }
-            .loading { font-size: 20px; }
-            .back-btn { padding: 10px 20px; font-size: 16px; }
+            h1 { font-size: 28px; }
+            #info p { font-size: 16px; }
+            .submit-btn, #withdraw-btn { padding: 10px 20px; font-size: 16px; }
+            canvas { width: 180px; height: 70px; }
+            .footer { font-size: 14px; }
+        }
+
+        @media (max-width: 400px) {
+            h1 { font-size: 24px; }
+            #info p { font-size: 14px; }
+            .submit-btn, #withdraw-btn { padding: 8px 15px; font-size: 14px; }
+            canvas { width: 150px; height: 60px; }
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .submit-btn:active, #withdraw-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 10px rgba(56, 189, 248, 0.3);
+        }
+
+        .captcha-input::placeholder {
+            color: #60a5fa;
+            font-style: italic;
+        }
+
+        #particles-js canvas {
+            display: block;
+            vertical-align: bottom;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+
+        .submit-btn, #withdraw-btn {
+            position: relative;
+        }
+
+        .submit-btn::after, #withdraw-btn::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 30px;
+            background: linear-gradient(45deg, #38bdf8, #0ea5e9);
+            filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .submit-btn:hover::after, #withdraw-btn:hover::after {
+            opacity: 0.7;
+        }
+
+        .captcha-wrapper:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        #result {
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            backdrop-filter: blur(5px);
+        }
+
+        #info {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(56, 189, 248, 0.2), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
         }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     <div class="container">
-        <h1>Lịch sử P2P TON</h1>
+        <h1>Kiếm tiền với Captcha</h1>
+        <div id="info"></div>
+        
+        <div class="captcha-wrapper">
+            <canvas id="captchaCanvas" width="200" height="80"></canvas>
+            <input type="text" id="captcha-input" class="captcha-input" placeholder="Nhập mã captcha">
+        </div>
+
+        <div class="btn-wrapper">
+            <button id="submit-btn" class="submit-btn">Gửi</button>
+            <button id="withdraw-btn" class="submit-btn">Rút USDT</button>
+        </div>
+
         <div id="result"></div>
-        <button class="back-btn" onclick="window.Telegram.WebApp.close()">Quay lại</button>
     </div>
     <div class="footer">©Treeng Premium 2025 - Designed with 💖</div>
 
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        const API_KEY = "b6726dd60c0c9d7beae31bafd11b1483133c9515faae94af815e5594963744e9";
-        const ADMIN_WALLET = "UQAsZfruadwz81tvZaRQtWJ6FlxY7aGOVl9V4dGxtGtN1V36";
+        const infoDiv = document.getElementById("info");
+        const captchaCanvas = document.getElementById("captchaCanvas");
+        const captchaInput = document.getElementById("captcha-input");
+        const submitBtn = document.getElementById("submit-btn");
+        const withdrawBtn = document.getElementById("withdraw-btn");
         const resultDiv = document.getElementById("result");
 
-        // Hàm định dạng số
-        function formatNumber(num) {
-            return num.toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 6 });
+        let userId = "";
+        const API_URL = "http://192.168.1.8:5050/add_usdt"; // Local API, thay bằng URL công khai khi deploy
+
+        // Lấy user_id từ URL
+        function getUserId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get("user_id") || "Unknown";
         }
 
-        // Hàm định dạng thời gian
-        function formatTime(utime) {
-            return new Date(utime * 1000).toLocaleString("vi-VN", {
-                hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric'
-            });
+        // Quản lý số dư web với localStorage
+        function getWebBalance() {
+            return parseFloat(localStorage.getItem(`web_balance_${userId}`) || "0");
         }
 
-        // Hàm fetch với retry
-        async function fetchWithRetry(url, retries = 3) {
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const response = await fetch(url, { timeout: 10000 });
-                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    return await response.json();
-                } catch (e) {
-                    if (i === retries - 1) throw e;
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                }
+        function setWebBalance(amount) {
+            localStorage.setItem(`web_balance_${userId}`, amount.toString());
+            updateUserInfo();
+        }
+
+        // Tạo mã giao dịch
+        function generateTxCode() {
+            return 'TX' + Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
+
+        // Tạo Captcha
+        function generateCaptcha() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            let currentCaptcha = "";
+            for (let i = 0; i < 6; i++) {
+                currentCaptcha += chars[Math.floor(Math.random() * chars.length)];
+            }
+            const ctx = captchaCanvas.getContext("2d");
+            ctx.clearRect(0, 0, captchaCanvas.width, captchaCanvas.height);
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 0, captchaCanvas.width, captchaCanvas.height);
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "#1e40af";
+            ctx.textAlign = "center";
+            ctx.fillText(currentCaptcha, captchaCanvas.width / 2, captchaCanvas.height / 2 + 10);
+            drawNoise(ctx, captchaCanvas.width, captchaCanvas.height);
+            captchaInput.value = "";
+            return currentCaptcha;
+        }
+
+        function drawNoise(ctx, width, height) {
+            for (let i = 0; i < 50; i++) {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+                ctx.beginPath();
+                ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 3, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
-        // Kiểm tra lịch sử P2P
-        async function fetchTransactionHistory() {
-            resultDiv.innerHTML = `<div class="loading"><div class="spinner"></div><span>Đang tải lịch sử giao dịch...</span></div>`;
+        // Gửi yêu cầu kiếm tiền
+        async function sendEarnCommand() {
             try {
-                const url = `https://toncenter.com/api/v2/getTransactions?address=${ADMIN_WALLET}&limit=50&api_key=${API_KEY}`;
-                const data = await fetchWithRetry(url);
-
-                if (!data.result || data.result.length === 0) {
-                    resultDiv.innerHTML = `<p class="error">404 - Không tìm thấy giao dịch nào!</p>`;
-                    return;
-                }
-
-                let historyHTML = '<div class="transaction-list">';
-                data.result.forEach(tx => {
-                    const amount = parseInt(tx.in_msg.value || 0) / 10**9;
-                    if (amount > 0) {  // Chỉ hiển thị giao dịch nhận TON
-                        const txData = {
-                            TxID: tx.transaction_id.hash.slice(0, 18) + "...",
-                            Amount: formatNumber(amount) + " TON",
-                            Sender: tx.in_msg.source.slice(0, 18) + "...",
-                            Memo: tx.in_msg.message || "None",
-                            Time: formatTime(tx.utime)
-                        };
-                        historyHTML += `
-                            <div class="transaction-item">
-                                <p><span class="label">TxID:</span> <span class="value">${txData.TxID}</span></p>
-                                <p><span class="label">Số TON:</span> <span class="value">${txData.Amount}</span></p>
-                                <p><span class="label">Người gửi:</span> <span class="value">${txData.Sender}</span></p>
-                                <p><span class="label">Ghi chú:</span> <span class="value">${txData.Memo}</span></p>
-                                <p><span class="label">Thời gian:</span> <span class="value">${txData.Time}</span></p>
-                            </div>
-                        `;
-                    }
-                });
-                historyHTML += '</div>';
-
-                resultDiv.innerHTML = historyHTML;
-            } catch (error) {
-                resultDiv.innerHTML = `<p class="error">404 - Lỗi: ${error.message}</p>`;
-                console.error("Fetch error:", error);
+                window.Telegram.WebApp.sendData(`/earn ${userId}`);
+                let currentBalance = getWebBalance();
+                setWebBalance(currentBalance + 0.1); // Cộng 0.00001 USDT vào web
+                resultDiv.innerHTML = `<p style="color:green;">✅ Thành công! Bạn đã nhận được 0.00001 USDT!</p>`;
+                setTimeout(() => { 
+                    currentCaptcha = generateCaptcha(); 
+                    resultDiv.innerHTML = ""; 
+                }, 3000);
+            } catch (e) {
+                resultDiv.innerHTML = `<p style="color:red;">❌ Lỗi khi gửi lệnh!</p>`;
             }
+        }
+
+        // Kiểm tra Captcha
+        let currentCaptcha = generateCaptcha();
+        function checkCaptcha() {
+            if (captchaInput.value.trim().toUpperCase() === currentCaptcha) {
+                sendEarnCommand();
+            } else {
+                resultDiv.innerHTML = `<p style="color:red;">❌ Sai mã captcha! Thử lại.</p>`;
+                setTimeout(() => { resultDiv.innerHTML = ""; }, 2000);
+            }
+        }
+
+        // Gửi yêu cầu rút tiền qua API Flask
+        withdrawBtn.addEventListener("click", async function() {
+            let currentBalance = getWebBalance();
+            if (currentBalance < 0.1) {
+                resultDiv.innerHTML = `<p style="color:red;">❌ Số dư web không đủ (cần ít nhất 0.1 USDT)!</p>`;
+                return;
+            }
+
+            let amount = currentBalance;
+            let txCode = generateTxCode();
+
+            try {
+                let response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user_id: userId, amount: amount, tx_code: txCode })
+                });
+
+                let result = await response.json();
+                if (result.success) {
+                    setWebBalance(0); // Reset số dư web
+                    resultDiv.innerHTML = `<p style="color:green;">✅ Đã rút ${amount} USDT! Mã GD: ${txCode}. Kiểm tra bot.</p>`;
+                    setTimeout(() => { resultDiv.innerHTML = ""; }, 3000);
+                } else {
+                    resultDiv.innerHTML = `<p style="color:red;">❌ ${result.message}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color:red;">⚠ Không thể kết nối đến bot! Đảm bảo bot chạy trên cổng 5050.</p>`;
+            }
+        });
+
+        // Hiển thị thông tin người dùng
+        function updateUserInfo() {
+            userId = getUserId();
+            let webBalance = getWebBalance();
+            infoDiv.innerHTML = `
+                <p><strong>ID Người dùng:</strong> ${userId}</p>
+                <p><strong>Số dư USDT (Web):</strong> ${webBalance.toFixed(5)} USDT</p>
+            `;
+            withdrawBtn.style.display = webBalance >= 0.1 ? "inline-block" : "none";
         }
 
         // Particle.js setup
         particlesJS("particles-js", {
             particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
-                color: { value: "#00c6ff" },
+                number: { value: 100, density: { enable: true, value_area: 800 } },
+                color: { value: "#38bdf8" },
                 shape: { type: "circle" },
-                opacity: { value: 0.5, random: true },
-                size: { value: 3, random: true },
-                line_linked: { enable: true, distance: 150, color: "#00c6ff", opacity: 0.4, width: 1 },
-                move: { enable: true, speed: 2, direction: "none", random: false, straight: false, out_mode: "out" }
+                opacity: { value: 0.6, random: true },
+                size: { value: 4, random: true },
+                line_linked: { enable: true, distance: 120, color: "#38bdf8", opacity: 0.4, width: 1 },
+                move: { enable: true, speed: 3, direction: "none", random: true, straight: false, out_mode: "out" }
             },
             interactivity: {
                 detect_on: "canvas",
@@ -303,9 +534,10 @@
             retina_detect: true
         });
 
-        // Tự động chạy
         window.onload = () => {
-            fetchTransactionHistory();
+            updateUserInfo();
+            currentCaptcha = generateCaptcha();
+            submitBtn.addEventListener("click", checkCaptcha);
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
         };
